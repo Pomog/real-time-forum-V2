@@ -1,21 +1,18 @@
 package app
 
 import (
+	"github.com/Pomog/real-time-forum-V2/internal/config"
 	"github.com/Pomog/real-time-forum-V2/internal/handler/http"
 	"github.com/Pomog/real-time-forum-V2/internal/handler/ws"
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/internal/repository"
+	"github.com/Pomog/real-time-forum-V2/internal/service"
+	"github.com/Pomog/real-time-forum-V2/pkg/auth"
+	"github.com/Pomog/real-time-forum-V2/pkg/database"
+	"github.com/Pomog/real-time-forum-V2/pkg/hash"
+	"github.com/Pomog/real-time-forum-V2/server"
 	"log"
 	"os"
-
-	"github.com/alseiitov/real-time-forum/internal/model"
-
-	"github.com/alseiitov/real-time-forum/pkg/auth"
-	"github.com/alseiitov/real-time-forum/pkg/hash"
-
-	"github.com/alseiitov/real-time-forum/internal/config"
-	"github.com/alseiitov/real-time-forum/internal/repository"
-	"github.com/alseiitov/real-time-forum/internal/server"
-	"github.com/alseiitov/real-time-forum/internal/service"
-	"github.com/alseiitov/real-time-forum/pkg/database"
 )
 
 func Run(configPath *string) {
@@ -39,10 +36,8 @@ func Run(configPath *string) {
 	// Run function that deletes expired sessions from database
 	go repository.DeleteExpiredSessions(db)
 
-	// Prepare repositories
 	repos := repository.NewRepositories(db)
 
-	// Prepare password hasher
 	passwordSalt := os.Getenv("PASSWORD_SALT")
 	hasher, err := hash.NewHasher(passwordSalt)
 	if err != nil {

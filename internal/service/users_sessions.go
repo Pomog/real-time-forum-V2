@@ -1,12 +1,11 @@
 package service
 
 import (
+	"errors"
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/internal/repository"
+	"github.com/Pomog/real-time-forum-V2/pkg/auth"
 	"time"
-
-	"github.com/alseiitov/real-time-forum/internal/repository"
-	"github.com/alseiitov/real-time-forum/pkg/auth"
-
-	"github.com/alseiitov/real-time-forum/internal/model"
 )
 
 type Tokens struct {
@@ -22,14 +21,14 @@ type UsersRefreshTokensInput struct {
 func (s *UsersService) RefreshTokens(input UsersRefreshTokensInput) (Tokens, error) {
 	sub, role, err := s.tokenManager.Parse(input.AccessToken)
 	if err != nil {
-		if err != auth.ErrExpiredToken {
+		if !errors.Is(err, auth.ErrExpiredToken) {
 			return Tokens{}, err
 		}
 	}
 
 	err = s.repo.DeleteSession(sub, input.RefreshToken)
 	if err != nil {
-		if err == repository.ErrNoRows {
+		if errors.Is(err, repository.ErrNoRows) {
 			return Tokens{}, ErrSessionNotFound
 		}
 		return Tokens{}, err

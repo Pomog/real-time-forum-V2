@@ -2,13 +2,14 @@ package ws
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/pkg/auth"
 	"log"
 	"sync"
 	"time"
 
-	"github.com/alseiitov/real-time-forum/internal/model"
-	"github.com/alseiitov/real-time-forum/pkg/auth"
 	"github.com/gorilla/websocket"
 )
 
@@ -22,12 +23,18 @@ func (h *Handler) connReadPump(conn *conn) {
 	defer h.closeConn(conn)
 
 	conn.conn.SetReadLimit(h.maxMessageSize)
-	conn.conn.SetReadDeadline(time.Now().Add(h.pongWait))
+	err := conn.conn.SetReadDeadline(time.Now().Add(h.pongWait))
+	if err != nil {
+		return
+	}
 
 	for {
 		event, err := conn.readEvent()
 		if err != nil {
-			conn.writeError(err)
+			err := conn.writeError(err)
+			if err != nil {
+				return
+			}
 			log.Println(err)
 			return
 		}
@@ -60,7 +67,10 @@ func (h *Handler) connReadPump(conn *conn) {
 
 		if err != nil {
 			log.Println(err.Error())
-			conn.writeError(err)
+			err := conn.writeError(err)
+			if err != nil {
+				return
+			}
 			return
 		}
 	}
@@ -74,13 +84,16 @@ func (h *Handler) pingConn(c *conn) {
 	}()
 	for {
 		<-ticker.C
-		c.conn.SetWriteDeadline(time.Now().Add(h.pongWait))
+		err := c.conn.SetWriteDeadline(time.Now().Add(h.pongWait))
+		if err != nil {
+			return
+		}
 
 		event := &model.WSEvent{
 			Type: model.WSEventTypes.PingMessage,
 		}
 
-		err := c.writeJSON(event)
+		err = c.writeJSON(event)
 		if err != nil {
 			return
 		}
@@ -98,7 +111,10 @@ func (h *Handler) closeConn(c *conn) {
 
 	for i := 0; i < len(client.conns); i++ {
 		if client.conns[i] == c {
-			client.conns[i].conn.Close()
+			err := client.conns[i].conn.Close()
+			if err != nil {
+				return
+			}
 			client.conns = append(client.conns[:i], client.conns[i+1:]...)
 			break
 		}
@@ -142,7 +158,10 @@ func (c *conn) readEvent() (model.WSEvent, error) {
 }
 
 func (h *Handler) identifyConn(c *conn) error {
-	c.conn.SetReadDeadline(time.Now().Add(h.tokenWait))
+	err := c.conn.SetReadDeadline(time.Now().Add(h.tokenWait))
+	if err != nil {
+		return err
+	}
 
 	_, messageBytes, err := c.conn.ReadMessage()
 	if err != nil {
@@ -158,8 +177,11 @@ func (h *Handler) identifyConn(c *conn) error {
 	token := fmt.Sprintf("%s", event.Body)
 	sub, _, err := h.tokenManager.Parse(token)
 	if err != nil {
-		if err == auth.ErrExpiredToken {
-			c.writeError(err)
+		if errors.Is(err, auth.ErrExpiredToken) {
+			err := c.writeError(err)
+			if err != nil {
+				return err
+			}
 			return h.identifyConn(c)
 		}
 		return err

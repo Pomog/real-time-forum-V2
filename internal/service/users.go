@@ -1,13 +1,16 @@
 package service
 
 import (
+	"errors"
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/internal/repository"
+	"github.com/Pomog/real-time-forum-V2/pkg/auth"
+	"github.com/Pomog/real-time-forum-V2/pkg/hash"
+	"golang.org/x/text/language"
 	"strings"
 	"time"
 
-	"github.com/alseiitov/real-time-forum/internal/model"
-	"github.com/alseiitov/real-time-forum/internal/repository"
-	"github.com/alseiitov/real-time-forum/pkg/auth"
-	"github.com/alseiitov/real-time-forum/pkg/hash"
+	"golang.org/x/text/cases"
 )
 
 type UsersService struct {
@@ -57,10 +60,11 @@ func (s *UsersService) SignUp(input UsersSignUpInput) error {
 
 	password := s.hasher.Hash(input.Password)
 
+	caser := cases.Title(language.English)
 	user := model.User{
 		Username:   strings.ToLower(input.Username),
-		FirstName:  strings.Title(strings.ToLower(input.FirstName)),
-		LastName:   strings.Title(strings.ToLower(input.LastName)),
+		FirstName:  caser.String(strings.ToLower(input.FirstName)),
+		LastName:   caser.String(strings.ToLower(input.LastName)),
 		Age:        input.Age,
 		Gender:     input.Gender,
 		Email:      strings.ToLower(input.Email),
@@ -72,7 +76,7 @@ func (s *UsersService) SignUp(input UsersSignUpInput) error {
 
 	err := s.repo.Create(user)
 
-	if err == repository.ErrAlreadyExist {
+	if errors.Is(err, repository.ErrAlreadyExist) {
 		return ErrUserAlreadyExist
 	}
 
@@ -90,7 +94,7 @@ func (s *UsersService) SignIn(input UsersSignInInput) (Tokens, error) {
 
 	user, err := s.repo.GetByCredentials(input.UsernameOrEmail, password)
 	if err != nil {
-		if err == repository.ErrNoRows {
+		if errors.Is(err, repository.ErrNoRows) {
 			return Tokens{}, ErrUserWrongPassword
 		}
 		return Tokens{}, err
@@ -102,7 +106,7 @@ func (s *UsersService) SignIn(input UsersSignInInput) (Tokens, error) {
 func (s *UsersService) GetByID(userID int) (model.User, error) {
 	user, err := s.repo.GetByID(userID)
 	if err != nil {
-		if err == repository.ErrNoRows {
+		if errors.Is(err, repository.ErrNoRows) {
 			return user, ErrUserDoesNotExist
 		}
 		return user, err
@@ -114,7 +118,7 @@ func (s *UsersService) GetByID(userID int) (model.User, error) {
 func (s *UsersService) GetUsersPosts(userID int) ([]model.Post, error) {
 	posts, err := s.repo.GetUsersPosts(userID)
 	if err != nil {
-		if err == repository.ErrNoRows {
+		if errors.Is(err, repository.ErrNoRows) {
 			return posts, ErrUserDoesNotExist
 		}
 		return posts, err
@@ -126,7 +130,7 @@ func (s *UsersService) GetUsersPosts(userID int) ([]model.Post, error) {
 func (s *UsersService) GetUsersRatedPosts(userID int) ([]model.Post, error) {
 	posts, err := s.repo.GetUsersRatedPosts(userID)
 	if err != nil {
-		if err == repository.ErrNoRows {
+		if errors.Is(err, repository.ErrNoRows) {
 			return posts, ErrUserDoesNotExist
 		}
 		return posts, err
@@ -137,7 +141,7 @@ func (s *UsersService) GetUsersRatedPosts(userID int) ([]model.Post, error) {
 
 func (s *UsersService) CreateModeratorRequest(userID int) error {
 	err := s.repo.CreateModeratorRequest(userID)
-	if err == repository.ErrAlreadyExist {
+	if errors.Is(err, repository.ErrAlreadyExist) {
 		return ErrModeratorRequestAlreadyExist
 	}
 

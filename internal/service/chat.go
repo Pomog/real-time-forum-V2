@@ -1,10 +1,9 @@
 package service
 
 import (
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/internal/repository"
 	"time"
-
-	"github.com/alseiitov/real-time-forum/internal/model"
-	"github.com/alseiitov/real-time-forum/internal/repository"
 )
 
 type ChatsService struct {

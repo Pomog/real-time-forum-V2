@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/alseiitov/real-time-forum/internal/model"
-	"github.com/alseiitov/real-time-forum/internal/repository"
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/internal/repository"
 )
 
 type NotificationsService struct {

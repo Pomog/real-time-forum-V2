@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"github.com/Pomog/real-time-forum-V2/internal/model"
 )
 
 type PostsRepo struct {

@@ -1,11 +1,11 @@
 package service
 
 import (
+	"errors"
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/internal/repository"
+	"github.com/Pomog/real-time-forum-V2/pkg/image"
 	"time"
-
-	"github.com/alseiitov/real-time-forum/internal/model"
-	"github.com/alseiitov/real-time-forum/internal/repository"
-	"github.com/alseiitov/real-time-forum/pkg/image"
 )
 
 type CommentsService struct {
@@ -58,7 +58,7 @@ func (s *CommentsService) Create(input CreateCommentInput) (model.Comment, error
 
 	comment.ID, err = s.repo.Create(comment)
 	if err != nil {
-		if err == repository.ErrForeignKeyConstraint {
+		if errors.Is(err, repository.ErrForeignKeyConstraint) {
 			return comment, ErrPostDoesntExist
 		}
 		return comment, err
@@ -67,7 +67,7 @@ func (s *CommentsService) Create(input CreateCommentInput) (model.Comment, error
 	// Create notification for post author
 	post, err := s.postsRepo.GetByID(input.PostID, 0)
 	if err != nil {
-		if err == repository.ErrForeignKeyConstraint {
+		if errors.Is(err, repository.ErrForeignKeyConstraint) {
 			return comment, ErrPostDoesntExist
 		}
 		return comment, err
@@ -87,7 +87,7 @@ func (s *CommentsService) Create(input CreateCommentInput) (model.Comment, error
 
 func (s *CommentsService) Delete(userID, postID int) error {
 	err := s.repo.Delete(userID, postID)
-	if err == repository.ErrNoRows {
+	if errors.Is(err, repository.ErrNoRows) {
 		return ErrDeletingComment
 	}
 
@@ -99,7 +99,7 @@ func (s *CommentsService) GetCommentsByPostID(postID int, userID int, page int) 
 
 	comments, err := s.repo.GetCommentsByPostID(postID, userID, s.commentsForPage, offset)
 	if err != nil {
-		if err == repository.ErrNoRows {
+		if errors.Is(err, repository.ErrNoRows) {
 			return nil, ErrPostDoesntExist
 		}
 		return nil, err
@@ -117,7 +117,7 @@ func (s *CommentsService) LikeComment(comentID, userID, likeType int) error {
 
 	likeCreated, err := s.repo.LikeComment(like)
 	if err != nil {
-		if err == repository.ErrForeignKeyConstraint {
+		if errors.Is(err, repository.ErrForeignKeyConstraint) {
 			return ErrCommentDoesntExist
 		}
 		return err

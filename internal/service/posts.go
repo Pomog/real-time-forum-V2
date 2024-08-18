@@ -1,11 +1,10 @@
 package service
 
 import (
+	"github.com/Pomog/real-time-forum-V2/internal/model"
+	"github.com/Pomog/real-time-forum-V2/internal/repository"
+	"github.com/Pomog/real-time-forum-V2/pkg/image"
 	"time"
-
-	"github.com/alseiitov/real-time-forum/internal/model"
-	"github.com/alseiitov/real-time-forum/internal/repository"
-	"github.com/alseiitov/real-time-forum/pkg/image"
 )
 
 type PostsService struct {
