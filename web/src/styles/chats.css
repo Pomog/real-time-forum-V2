@@ -1,9 +1,10 @@
 #chats-container {
-    padding: 10px;
+    padding: 16px;
     display: grid;
     grid-template-columns: 300px auto;
     background-color: #292a2d;
-    border-radius: 5px;
+    border-radius: 8px;
+    box-sizing: border-box;
 }
 
 #chats {
@@ -12,21 +13,25 @@
 }
 
 .chats-title {
+    font-family: 'Montserrat', sans-serif;
     font-size: 18px;
-    font-weight: 600;
-    padding: 10px;
-    margin: 0px;
+    font-weight: 700;
+    padding: 16px;
+    margin: 0;
+    color: #c9c9d8;
 }
 
 .chat {
     display: grid;
     grid-template-columns: 50px 175px 25px;
     grid-gap: 10px;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 10px;
     border-radius: 5px;
     background-color: #3b3d42;
-    color: #c9c9d8
+    color: #c9c9d8;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
 }
 
 .chat.active {
@@ -39,6 +44,7 @@
     max-width: 188px;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin: 0;
 }
 
 .unread-messages-count {
@@ -48,15 +54,14 @@
     font-size: 13px;
     text-align: center;
     line-height: 25px;
-    border-radius: 100%;
-    vertical-align: middle;
+    border-radius: 50%;
     background-color: #c9c9d8;
     color: #292a2d;
 }
 
 .chat-unread-messages-count.active {
     background-color: #3b3d42;
-    color: #c9c9d8
+    color: #c9c9d8;
 }
 
 .chat img {
@@ -79,11 +84,13 @@
     position: relative;
     top: 50%;
     text-align: center;
+    font-family: 'Montserrat', sans-serif;
     font-size: 22px;
+    color: #c9c9d8;
 }
 
 #chat-messages {
-    padding: 10px;
+    padding: 16px;
     overflow: auto;
     height: 520px;
 }
@@ -92,16 +99,16 @@
     width: max-content;
     min-width: 180px;
     max-width: 500px;
-    margin: 10px 10px 10px 10px;
-    padding: 10px;
+    margin: 10px 10px;
+    padding: 12px;
     border-radius: 5px;
     background-color: #3b3d42;
     color: #c9c9d8;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .message-text {
-    margin: 0;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
 }
 
 .message-info {
@@ -113,7 +120,7 @@
     margin: 0;
     font-size: 14px;
     margin-left: auto;
-    margin-right: 0;
+    color: #c9c9d8;
 }
 
 .message-status {
@@ -122,11 +129,10 @@
 
 .sended-message {
     margin-left: auto;
-    margin-right: 0;
 }
 
 #message-form {
-    padding-left: 10px;
+    padding-left: 16px;
 }
 
 #message-input {
@@ -134,18 +140,19 @@
     height: 40px;
     padding: 10px;
     background-color: #3b3d42;
-    color: #c9c9d8
+    color: #c9c9d8;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .typing-indicator {
     display: none;
-    will-change: transform;
     padding: 5px 0;
     animation: 2s infinite ease-out;
 }
 
 .typing-indicator p {
-    /* display: inline; */
     margin: 0;
     padding: 0;
 }

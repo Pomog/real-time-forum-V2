@@ -51,6 +51,8 @@ func NewHandler(services *service.Services, tokenManager auth.TokenManager, wsHa
 
 func (h *Handler) Init() {
 	images := http.FileServer(http.Dir("./database/images"))
+	avatarFemale := http.FileServer(http.Dir("./database/default_avatars/female"))
+	avatarMale := http.FileServer(http.Dir("./database/default_avatars/male"))
 
 	go h.wsHandler.LogConns()
 
@@ -206,6 +208,20 @@ func (h *Handler) Init() {
 			Method:  "GET",
 			MinRole: model.Roles.Guest,
 			Handler: gorouter.WrapHandler(http.StripPrefix("/images/", images)),
+		},
+
+		{
+			Path:    "/images/default_avatars/female/*",
+			Method:  "GET",
+			MinRole: model.Roles.Guest,
+			Handler: gorouter.WrapHandler(http.StripPrefix("/images/default_avatars/female", avatarFemale)),
+		},
+
+		{
+			Path:    "/images/default_avatars/male/*",
+			Method:  "GET",
+			MinRole: model.Roles.Guest,
+			Handler: gorouter.WrapHandler(http.StripPrefix("/images/default_avatars/male", avatarMale)),
 		},
 	}
 

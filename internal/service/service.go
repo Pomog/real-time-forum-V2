@@ -79,8 +79,8 @@ type ServicesDeps struct {
 	AccessTokenTTL                 time.Duration
 	RefreshTokenTTL                time.Duration
 	ImagesDir                      string
-	DefaultMaleAvatar              string
-	DefaultFemaleAvatar            string
+	MaleAvatarsDir                 string
+	FemaleAvatarsDir               string
 	PostsForPage                   int
 	CommentsForPage                int
 	PostsPreModerationIsEnabled    bool
@@ -100,7 +100,7 @@ func NewServices(deps ServicesDeps) *Services {
 	categoriesService := NewCategoriesService(deps.Repos.Categories, postsService)
 	usersService := NewUsersService(
 		deps.Repos.Users, deps.Hasher, deps.TokenManager, deps.AccessTokenTTL,
-		deps.RefreshTokenTTL, deps.ImagesDir, deps.DefaultMaleAvatar, deps.DefaultFemaleAvatar,
+		deps.RefreshTokenTTL, deps.ImagesDir, deps.MaleAvatarsDir, deps.FemaleAvatarsDir,
 	)
 	chatsService := NewChatsService(deps.Repos.Chats, deps.Repos.Users, deps.EventsChan)
 	moderatorsService := NewModeratorsService(deps.Repos.Moderators)

@@ -26,7 +26,7 @@ func main() {
 
 	http.Handle("/src/", http.StripPrefix("/src/", fileServer))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		err := indexTemp.Execute(w, conf.BackendAdress())
+		err := indexTemp.Execute(w, conf.BackendAddress())
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, err := w.Write([]byte(err.Error()))

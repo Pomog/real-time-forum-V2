@@ -25,8 +25,8 @@
         "pongWait": 60
     },
     "forum": {
-        "defaultMaleAvatar": "default-male-avatar.jpg",
-        "defaultFemaleAvatar": "default-female-avatar.jpg",
+        "maleAvatarsDir": "./database/default_avatars/male",
+        "femaleAvatarsDir": "./database/default_avatars/female",
         "postsForPage": 10,
         "commentsForPage": 5,
         "postsPreModerationIsEnabled": true,

@@ -2,11 +2,14 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"github.com/Pomog/real-time-forum-V2/internal/model"
 	"github.com/Pomog/real-time-forum-V2/internal/repository"
 	"github.com/Pomog/real-time-forum-V2/pkg/auth"
 	"github.com/Pomog/real-time-forum-V2/pkg/hash"
 	"golang.org/x/text/language"
+	"math/rand"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -14,27 +17,28 @@ import (
 )
 
 type UsersService struct {
-	repo                repository.Users
-	hasher              hash.PasswordHasher
-	tokenManager        auth.TokenManager
-	accessTokenTTL      time.Duration
-	refreshTokenTTL     time.Duration
-	imagesDir           string
-	defaultMaleAvatar   string
-	defaultFemaleAvatar string
+	repo             repository.Users
+	hasher           hash.PasswordHasher
+	tokenManager     auth.TokenManager
+	accessTokenTTL   time.Duration
+	refreshTokenTTL  time.Duration
+	imagesDir        string
+	maleAvatarsDir   string
+	femaleAvatarsDir string
 }
 
 func NewUsersService(repo repository.Users, hasher hash.PasswordHasher, tokenManager auth.TokenManager, accessTokenTTL time.Duration,
-	refreshTokenTTL time.Duration, imagesDir, defaultMaleAvatar, defaultFemaleAvatar string) *UsersService {
+	refreshTokenTTL time.Duration, imagesDir, maleAvatarsDir, femaleAvatarsDir string) *UsersService {
+
 	return &UsersService{
-		repo:                repo,
-		hasher:              hasher,
-		tokenManager:        tokenManager,
-		accessTokenTTL:      accessTokenTTL,
-		refreshTokenTTL:     refreshTokenTTL,
-		imagesDir:           imagesDir,
-		defaultMaleAvatar:   defaultMaleAvatar,
-		defaultFemaleAvatar: defaultFemaleAvatar,
+		repo:             repo,
+		hasher:           hasher,
+		tokenManager:     tokenManager,
+		accessTokenTTL:   accessTokenTTL,
+		refreshTokenTTL:  refreshTokenTTL,
+		imagesDir:        imagesDir,
+		maleAvatarsDir:   maleAvatarsDir,
+		femaleAvatarsDir: femaleAvatarsDir,
 	}
 }
 
@@ -51,20 +55,28 @@ type UsersSignUpInput struct {
 func (s *UsersService) SignUp(input UsersSignUpInput) error {
 	var avatar string
 
+	fmt.Println("s.maleAvatarsDir")
+	fmt.Println(s.maleAvatarsDir)
+	fmt.Println(s.femaleAvatarsDir)
+	fmt.Println("*******************************************")
+
 	if input.Gender == model.Gender.Male {
-		avatar = s.defaultMaleAvatar
+		avatar = s.getRandomAvatar(s.maleAvatarsDir)
+	} else if input.Gender == model.Gender.Female {
+		avatar = s.getRandomAvatar(s.femaleAvatarsDir)
 	}
-	if input.Gender == model.Gender.Female {
-		avatar = s.defaultFemaleAvatar
-	}
+
+	fmt.Println("avatar")
+	fmt.Println(avatar)
+	fmt.Println("*******************************************")
 
 	password := s.hasher.Hash(input.Password)
 
-	caser := cases.Title(language.English)
+	causer := cases.Title(language.English)
 	user := model.User{
 		Username:   strings.ToLower(input.Username),
-		FirstName:  caser.String(strings.ToLower(input.FirstName)),
-		LastName:   caser.String(strings.ToLower(input.LastName)),
+		FirstName:  causer.String(strings.ToLower(input.FirstName)),
+		LastName:   causer.String(strings.ToLower(input.LastName)),
 		Age:        input.Age,
 		Gender:     input.Gender,
 		Email:      strings.ToLower(input.Email),
@@ -81,6 +93,20 @@ func (s *UsersService) SignUp(input UsersSignUpInput) error {
 	}
 
 	return err
+}
+
+func (s *UsersService) getRandomAvatar(dir string) string {
+	files, err := filepath.Glob(filepath.Join(dir, "*.png"))
+	if err != nil || len(files) == 0 {
+		return ""
+	}
+
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	selectedFile := files[r.Intn(len(files))]
+
+	cleanedFilePath := strings.Replace(selectedFile, "database\\", "", -1)
+
+	return cleanedFilePath
 }
 
 type UsersSignInInput struct {

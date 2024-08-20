@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/Pomog/real-time-forum-V2/internal/model"
 	"github.com/Pomog/real-time-forum-V2/internal/repository"
 	"github.com/Pomog/real-time-forum-V2/pkg/image"
@@ -64,7 +65,7 @@ func (s *PostsService) Create(input CreatePostInput) (int, error) {
 	}
 
 	id, err := s.repo.Create(post)
-	if err == repository.ErrForeignKeyConstraint {
+	if errors.Is(err, repository.ErrForeignKeyConstraint) {
 		return 0, ErrCategoryDoesntExist
 	}
 
@@ -74,7 +75,7 @@ func (s *PostsService) Create(input CreatePostInput) (int, error) {
 func (s *PostsService) GetByID(postID, userID int) (model.Post, error) {
 	post, err := s.repo.GetByID(postID, userID)
 	if err != nil {
-		if err == repository.ErrNoRows {
+		if errors.Is(err, repository.ErrNoRows) {
 			return post, ErrPostDoesntExist
 		}
 		return post, err
@@ -85,7 +86,7 @@ func (s *PostsService) GetByID(postID, userID int) (model.Post, error) {
 
 func (s *PostsService) Delete(userID, postID int) error {
 	err := s.repo.Delete(userID, postID)
-	if err == repository.ErrNoRows {
+	if errors.Is(err, repository.ErrNoRows) {
 		return ErrDeletingPost
 	}
 
@@ -106,7 +107,7 @@ func (s *PostsService) LikePost(postID, userID, likeType int) error {
 
 	likeCreated, err := s.repo.LikePost(like)
 	if err != nil {
-		if err == repository.ErrForeignKeyConstraint {
+		if errors.Is(err, repository.ErrForeignKeyConstraint) {
 			return ErrPostDoesntExist
 		}
 		return err

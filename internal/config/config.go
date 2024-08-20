@@ -49,12 +49,13 @@ type (
 	}
 
 	Forum struct {
-		DefaultMaleAvatar              string `json:"defaultMaleAvatar" validator:"required"`
-		DefaultFemaleAvatar            string `json:"defaultFemaleAvatar" validator:"required"`
+		MaleAvatarsDir                 string `json:"maleAvatarsDir" validator:"required"`
+		FemaleAvatarsDir               string `json:"femaleAvatarsDir" validator:"required"`
 		PostsForPage                   int    `json:"postsForPage" validator:"required"`
 		CommentsForPage                int    `json:"commentsForPage" validator:"required"`
 		PostsPreModerationIsEnabled    bool   `json:"postsPreModerationIsEnabled"`
 		CommentsPreModerationIsEnabled bool   `json:"commentsPreModerationIsEnabled"`
+		DefaultFemaleAvatar            interface{}
 	}
 )
 
@@ -80,7 +81,7 @@ func NewConfig(confPath string) (*Conf, error) {
 	return &config, nil
 }
 
-func (c *Conf) BackendAdress() string {
+func (c *Conf) BackendAddress() string {
 	host := c.API.Host
 	port := c.API.Port
 	if host == "localhost" || host == "127.0.0.1" {
