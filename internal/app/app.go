@@ -16,24 +16,21 @@ import (
 )
 
 func Run(configPath *string) {
-	// Get forum config
-	config, err := config.NewConfig(*configPath)
+	configServer, err := config.NewConfig(*configPath)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// Prepare database
 	db, err := database.ConnectDB(
-		config.Database.Driver,
-		config.Database.Path,
-		config.Database.FileName,
-		config.Database.SchemesDir,
+		configServer.Database.Driver,
+		configServer.Database.Path,
+		configServer.Database.FileName,
+		configServer.Database.SchemesDir,
 	)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// Run function that deletes expired sessions from database
 	go repository.DeleteExpiredSessions(db)
 
 	repos := repository.NewRepositories(db)
@@ -44,10 +41,9 @@ func Run(configPath *string) {
 		log.Fatalln(err)
 	}
 
-	// Prepare JWT token manager
 	jwtSigningKey := os.Getenv("JWT_SIGNING_KEY")
-	accessTokenTTL := config.AccessTokenTTL()
-	refreshTokenTTL := config.RefreshTokenTTL()
+	accessTokenTTL := configServer.AccessTokenTTL()
+	refreshTokenTTL := configServer.RefreshTokenTTL()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -57,10 +53,8 @@ func Run(configPath *string) {
 		log.Fatalln(err)
 	}
 
-	// channel to receive notifications from services and send to users by websocket
 	eventsChan := make(chan *model.WSEvent)
 
-	// Prepare services
 	services := service.NewServices(service.ServicesDeps{
 		Repos:                          repos,
 		EventsChan:                     eventsChan,
@@ -68,21 +62,19 @@ func Run(configPath *string) {
 		TokenManager:                   tokenManager,
 		AccessTokenTTL:                 accessTokenTTL,
 		RefreshTokenTTL:                refreshTokenTTL,
-		ImagesDir:                      config.Database.ImagesDir,
-		MaleAvatarsDir:                 config.Forum.MaleAvatarsDir,
-		FemaleAvatarsDir:               config.Forum.FemaleAvatarsDir,
-		PostsForPage:                   config.Forum.PostsForPage,
-		CommentsForPage:                config.Forum.CommentsForPage,
-		PostsPreModerationIsEnabled:    config.Forum.PostsPreModerationIsEnabled,
-		CommentsPreModerationIsEnabled: config.Forum.CommentsPreModerationIsEnabled,
+		ImagesDir:                      configServer.Database.ImagesDir,
+		MaleAvatarsDir:                 configServer.Forum.MaleAvatarsDir,
+		FemaleAvatarsDir:               configServer.Forum.FemaleAvatarsDir,
+		PostsForPage:                   configServer.Forum.PostsForPage,
+		CommentsForPage:                configServer.Forum.CommentsForPage,
+		PostsPreModerationIsEnabled:    configServer.Forum.PostsPreModerationIsEnabled,
+		CommentsPreModerationIsEnabled: configServer.Forum.CommentsPreModerationIsEnabled,
 	})
 
-	// Prepare handler
-	wsHandler := ws.NewHandler(eventsChan, services, tokenManager, config)
+	wsHandler := ws.NewHandler(eventsChan, services, tokenManager, configServer)
 	httpHandler := http.NewHandler(services, tokenManager, wsHandler)
 	httpHandler.Init()
 
-	// Run server
-	server := server.NewServer(config, httpHandler.Router)
-	log.Fatalln(server.Run())
+	serverAPI := server.NewServer(configServer, httpHandler.Router)
+	log.Fatalln(serverAPI.Run())
 }

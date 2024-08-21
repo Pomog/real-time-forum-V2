@@ -76,7 +76,7 @@ const router = async () => {
 
     const pageView = new match.route.view(getParams(match), user);
     document.querySelector("#app").innerHTML = await pageView.getHtml();
-    pageView.init()
+    await pageView.init()
 };
 
 window.addEventListener("popstate", router);

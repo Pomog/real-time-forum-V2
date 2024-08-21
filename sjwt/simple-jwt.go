@@ -41,11 +41,11 @@ func (j *jwt) Sign(secret string) (string, error) {
 }
 
 func Parse(token string) (*jwt, error) {
-	splited := split(token)
-	if len(splited) != 3 {
+	split := split(token)
+	if len(split) != 3 {
 		return nil, errors.New("invalid token")
 	}
-	header, payload := splited[0], splited[1]
+	header, payload := split[0], split[1]
 
 	jwt, err := decodeJWT(header, payload)
 	if err != nil {

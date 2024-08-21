@@ -28,8 +28,10 @@ go.work.sum
 .env
 
 build
+
 database/*
 database/images/*
 !database/schema
+!database/default_avatars/
 !database/images/default-male-avatar.jpg
 !database/images/default-female-avatar.jpg

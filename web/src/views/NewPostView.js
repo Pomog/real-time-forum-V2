@@ -77,7 +77,7 @@ export default class extends AbstractView {
         const imageMaxSize = 20 * 1024 * 1024
         const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"]
 
-        var imageBase64 = ""
+        let imageBase64 = "";
 
         imageInput.addEventListener("change", async () => {
             errorMessage.innerText = ""
@@ -99,7 +99,7 @@ export default class extends AbstractView {
             }
 
             imageBase64 = await Utils.fileToBase64(image)
-            imagePreview.innerHTML = `<img src="${imageBase64}">`
+            imagePreview.innerHTML = `<img src="${imageBase64}" alt="image">`
         })
 
         document.getElementById("post-form").addEventListener("submit", async () => {

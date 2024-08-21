@@ -1,11 +1,11 @@
 import AbstractView from "./AbstractView.js";
 import fetcher from "../services/Fetcher.js"
-import router from "../index.js"
 import Utils from "../services/Utils.js";
+import PostUtils from "../services/PostUtils.js";
 
-var currCategoryID
-var currPageNum
-var postsEnded = false
+let currCategoryID;
+let currPageNum;
+let postsEnded = false;
 
 const getCategories = async () => {
     const path = "/api/categories"
@@ -29,7 +29,7 @@ const drawCategories = async (categories) => {
             document.getElementById("page-number").innerText = currPageNum
 
             updateQueryParams()
-            drawPostsByCategoryID(category.id, currPageNum)
+            await drawPostsByCategoryID(category.id, currPageNum)
         })
 
         categoriesEl.append(el)
@@ -48,38 +48,13 @@ const drawPostsByCategoryID = async (categoryID, page) => {
 
     if (data.posts) {
         data.posts.forEach((post) => {
-            const postEl = newPostElement(post)
+            const postEl = PostUtils.newPostElement(post);
             postsEl.append(postEl)
         })
     } else {
         postsMsg.innerText = "No posts"
         postsEnded = true
     }
-}
-
-const newPostElement = (post) => {
-    const el = document.createElement("div")
-    el.classList.add("post")
-
-    const linkToPost = document.createElement("a")
-    linkToPost.classList.add("post-link")
-    linkToPost.setAttribute("href", `/post/${post.id}`)
-    linkToPost.setAttribute("data-link", "")
-    linkToPost.innerText = `${post.title}`
-
-    const postDate = document.createElement("p")
-    postDate.innerText = new Date(post.date).toLocaleString()
-
-    const linkToAuthor = document.createElement("a")
-    linkToAuthor.setAttribute("href", `/user/${post.author.id}`)
-    linkToAuthor.setAttribute("data-link", "")
-    linkToAuthor.innerText = `${post.author.firstName} ${post.author.lastName}`
-
-    el.append(linkToPost)
-    el.append(postDate)
-    el.append(linkToAuthor)
-
-    return el
 }
 
 const updateQueryParams = () => {
@@ -104,7 +79,7 @@ export default class extends AbstractView {
             <div id="posts-msg"></div>
             <div class="navigation-buttons">
                 <button id="prev-button">Newer</button>
-                <p id="page-number"></p>
+                <p id="page-number" style="display: none"></p>
                 <button id="next-button">Older</button>
             </div>
         `;
@@ -120,7 +95,7 @@ export default class extends AbstractView {
         if (!categories) {
             return
         }
-        drawCategories(categories)
+        await drawCategories(categories)
 
         const categoryEl = document.getElementById(`category-${currCategoryID}`)
         if (!categoryEl) {
@@ -147,15 +122,13 @@ export default class extends AbstractView {
         })
 
         prevButtonEl.addEventListener("click", () => {
-            if (currPageNum == 1) {
-                return
+            if (currPageNum !== 1) {
+                postsEnded = false
+                currPageNum--
+                pageNumber.innerText = currPageNum
+                updateQueryParams()
+                drawPostsByCategoryID(currCategoryID, currPageNum)
             }
-            postsEnded = false
-            currPageNum--
-            pageNumber.innerText = currPageNum
-            updateQueryParams()
-
-            drawPostsByCategoryID(currCategoryID, currPageNum)
         })
     }
 }
