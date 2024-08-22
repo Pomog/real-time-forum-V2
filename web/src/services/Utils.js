@@ -1,9 +1,9 @@
 import Ws from "./Ws.js";
 
 const parseJwt = (token) => {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
@@ -20,12 +20,19 @@ const getUser = () => {
 }
 
 const logOut = () => {
-    localStorage.removeItem('sub')
-    localStorage.removeItem('role')
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('sub');
+    localStorage.removeItem('role');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     Ws.disconnect()
+        .then(() => {
+            console.log('WebSocket disconnected successfully.');
+        })
+        .catch((err) => {
+            console.error('Error disconnecting WebSocket:', err);
+        });
 }
+
 
 
 const fileToBase64 = (file) => {

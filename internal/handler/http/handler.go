@@ -147,13 +147,13 @@ func (h *Handler) Init() {
 			Handler: h.getCategoryPage,
 		},
 
-		// Comments Handlers
 		{
 			Path:    "/api/posts/:post_id/comments/:page",
 			Method:  "GET",
 			MinRole: model.Roles.Guest,
 			Handler: h.getCommentsOfPost,
 		},
+
 		{
 			Path:    "/api/posts/:post_id/comments",
 			Method:  "POST",
@@ -187,7 +187,6 @@ func (h *Handler) Init() {
 			Handler: h.RequestForModeratorAction,
 		},
 
-		// Chat Handlers
 		{
 			Path:    "/ws",
 			Method:  "GET",
@@ -195,7 +194,6 @@ func (h *Handler) Init() {
 			Handler: h.wsHandler.ServeWS,
 		},
 
-		// Swagger handler
 		{
 			Path:    "/swagger/*",
 			Method:  "GET",

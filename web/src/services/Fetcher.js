@@ -38,7 +38,7 @@ const makeRequest = async (path, body, method) => {
     }
 
     const accessToken = localStorage.getItem("accessToken")
-    if (accessToken != undefined) {
+    if (accessToken !== undefined) {
         options.headers = new Headers({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
@@ -47,10 +47,9 @@ const makeRequest = async (path, body, method) => {
 
     const response = await fetch(url, options).catch((e) => {
         Utils.showError(503)
-        return
     })
 
-    var respBody
+    let respBody;
 
     try {
         respBody = await response.json()
@@ -58,8 +57,8 @@ const makeRequest = async (path, body, method) => {
         return
     }
     
-    if (response.status == 400) {
-        if (respBody.error == "invalid token") {
+    if (response.status === 400) {
+        if (respBody.error === "invalid token") {
             Utils.logOut()
             Router.navigateTo("/sign-in")
             return
@@ -74,15 +73,15 @@ const makeRequest = async (path, body, method) => {
         return
     }
 
-    if (response.status == 401) {
-        if (respBody.error == "token has expired") {
+    if (response.status === 401) {
+        if (respBody.error === "token has expired") {
             await fetcher.refreshToken()
             return await makeRequest(path, body, method)
         }
         return respBody
     }
 
-    if (response.status == 409) {
+    if (response.status === 409) {
         return respBody
     }
 

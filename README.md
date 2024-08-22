@@ -3,6 +3,9 @@
 Real-Time Forum V2 is a single-page application built with Golang, SQLite, JavaScript, HTML, and CSS. It allows users to register, log in, create posts, comment on posts, and send private messages in real-time. The forum leverages WebSockets for real-time communication and provides a modern, interactive user experience without relying on frontend frameworks like React or Angular.
 
 - [SERVER instructions](server.md)
+- [CLIENT instructions](client.md)
+
+- [View Management](viewmanagement.md)
 
 ## Features
 

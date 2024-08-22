@@ -30,8 +30,13 @@ const getParams = match => {
 
 const navigateTo = url => {
     history.pushState(null, null, url);
-    router();
+    router().then(() => {
+        console.log("Navigation complete");
+    }).catch(err => {
+        console.error("Navigation failed", err);
+    });
 };
+
 
 const router = async () => {
     const routes = [
@@ -44,7 +49,6 @@ const router = async () => {
         { path: "/user/:userID", view: Profile, minRole: roles.user },
     ];
 
-    // Test each route for potential match
     const potentialMatches = routes.map(route => {
         return {
             route: route,
@@ -67,7 +71,7 @@ const router = async () => {
 
     const navBarView = new NavBar(null, user);
     document.querySelector("#navbar").innerHTML = await navBarView.getHtml();
-    navBarView.init()
+    await navBarView.init()
 
     if (user.role < match.route.minRole) {
         Utils.showError(401, "Please sign in to access this page")
@@ -100,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         await Ws.connect()
     }
 
-    router()
+    await router()
 });
 
 
