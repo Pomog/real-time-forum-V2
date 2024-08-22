@@ -37,7 +37,6 @@ const navigateTo = url => {
     });
 };
 
-
 const router = async () => {
     const routes = [
         { path: "/", view: Home, minRole: roles.guest },

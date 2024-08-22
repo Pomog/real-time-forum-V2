@@ -60,20 +60,20 @@ func (r *Router) handle(pattern string, handler Handler, method string) {
 
 func readPatternAndKeys(pattern string) (*regexp.Regexp, []string) {
 	var keys []string
-	splited := strings.Split(pattern, "/")
+	split := strings.Split(pattern, "/")
 
-	for i, v := range splited {
+	for i, v := range split {
 		if strings.HasPrefix(v, ":") {
 			keys = append(keys, v[1:])
-			splited[i] = `([\w\._-]+)`
+			split[i] = `([\w\._-]+)`
 		}
 		if v == "*" {
 			keys = append(keys, fmt.Sprintf("param%d", i))
-			splited[i] = `([\w\._-]+)`
+			split[i] = `([\w\._-]+)`
 		}
 	}
 
-	regexStr := fmt.Sprintf("^%s$", strings.Join(splited, "/"))
+	regexStr := fmt.Sprintf("^%s$", strings.Join(split, "/"))
 	return regexp.MustCompile(regexStr), keys
 }
 

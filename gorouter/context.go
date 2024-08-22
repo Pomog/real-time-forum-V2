@@ -3,7 +3,7 @@ package gorouter
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 )
@@ -22,7 +22,10 @@ func (ctx *Context) WriteString(code int, body string) {
 	ctx.ResponseWriter.Header().Set("Content-Type", "text/plain")
 	ctx.WriteHeader(code)
 
-	ctx.ResponseWriter.Write([]byte(body))
+	_, err := ctx.ResponseWriter.Write([]byte(body))
+	if err != nil {
+		ctx.WriteError(500, "ctx.WriteString error")
+	}
 }
 
 func (ctx *Context) WriteJSON(code int, data interface{}) error {
@@ -33,7 +36,10 @@ func (ctx *Context) WriteJSON(code int, data interface{}) error {
 	ctx.ResponseWriter.Header().Set("Content-Type", "application/json")
 	ctx.WriteHeader(code)
 
-	ctx.ResponseWriter.Write(jsonData)
+	_, err = ctx.ResponseWriter.Write(jsonData)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -46,7 +52,7 @@ func (ctx *Context) WriteError(code int, err string) {
 }
 
 func (ctx *Context) ReadBody(data interface{}) error {
-	body, err := ioutil.ReadAll(ctx.Request.Body)
+	body, err := io.ReadAll(ctx.Request.Body)
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,7 @@
 # Client-Side Routing and View Management
 
-This module is responsible for handling client-side routing, view rendering, and managing user roles in the Real-Time Forum V2 application. It dynamically loads and initializes views based on the current URL path and the user's role.
+This module is responsible for handling client-side routing, view rendering, and managing user roles in the application.
+It dynamically loads and initializes views based on the current URL path and the user's role, providing a seamless and role-based navigation experience.
 
 ## Key Components
 
@@ -40,10 +41,7 @@ The `router` function is the core of the client-side routing system:
 - **Role Validation:** Checks the user's role against the required role for the matched route. If the user's role is insufficient, an error is displayed.
 - **View Rendering:** Renders the matched view, passing any URL parameters and the current user information.
 
-### 6. Navigation Bar
-- **`NavBar`:** This view is dynamically rendered based on the user's role, ensuring that users only see navigation options relevant to their permissions.
-
-### 7. Event Listeners
+### 6. Event Listeners
 - **`popstate`:** Listens for back/forward navigation events (e.g., using the browser's back button) and re-runs the `router` function.
 - **`storage`:** Monitors changes to `localStorage` to detect if the user logs out in a different tab. If the user logs out, the page is reloaded to update the UI.
 - **`DOMContentLoaded`:** Initializes the application when the DOM is fully loaded:
@@ -53,7 +51,3 @@ The `router` function is the core of the client-side routing system:
 
 ### 8. Exported Functionality
 - **`navigateTo(url)`:** Exposed for external use, allowing other modules to trigger navigation programmatically.
-
-## Usage
-
-This routing and view management system is integral to the Real-Time Forum V2's single-page application (SPA) structure. It ensures that the correct views are rendered based on the URL and the user's role, providing a seamless and role-based navigation experience.
