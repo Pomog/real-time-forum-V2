@@ -21,13 +21,15 @@ The getConnection() function is responsible for creating or retrieving an active
 Example:
 ```javascript
 const connection = await getConnection();
-WebSocket Event Handlers:
-onopen: Sends the authentication token to the server when the connection is established.
-onerror: Displays an error message using Utils.showError() if the connection fails.
-onmessage: Handles incoming messages from the server and triggers corresponding actions based on the message type.
-Example Event Handling:
-javascript
-Copy code
+```
+
+## WebSocket Event Handlers:
+  - **onopen:** Sends the authentication token to the server when the connection is established.
+  - **onerror:** Displays an error message using Utils.showError() if the connection fails.
+  - **onmessage:** Handles incoming messages from the server and triggers corresponding actions based on the message type.
+
+### Example Event Handling:
+```javascript
 conn.onmessage = async function (evt) {
     let obj = JSON.parse(evt.data);
     switch (obj.type) {
@@ -41,6 +43,7 @@ conn.onmessage = async function (evt) {
     }
 };
 ```
+
 ### Ws Object
 The Ws object provides methods for managing the WebSocket connection.
 
@@ -48,16 +51,15 @@ The Ws object provides methods for managing the WebSocket connection.
 Establishes a WebSocket connection by calling getConnection() and storing the connection instance.
 ```javascript
 Ws.connect();
-send(e)
 ```
-
+  - **send(e)**
 Sends a message over the WebSocket connection. Ensures that a connection is established before sending.
 ```javascript
 Ws.send(JSON.stringify({ type: "message", body: "Hello, World!" }));
-disconnect()
 ```
 
-  - **Closes the WebSocket connection.**
+  - **disconnect()**
+Closes the WebSocket connection.**
 ```javascript
 Ws.disconnect();
 ```
