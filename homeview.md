@@ -110,7 +110,6 @@ Fetches and displays posts for a specific category and page.
 Updates the URL query parameters to reflect the current category and page number.
 
 ## External Dependencies
-- [PostUtils](PostUtils.md)
 - [fetcher](fetcher.md): Handles HTTP requests to fetch data from the server.
 - [Utils](Utils.md): Provides utility functions like error handling.
 - [PostUtils](PostUtils.md): Provides helper functions for creating and managing post elements.
