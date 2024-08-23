@@ -17,7 +17,7 @@ It dynamically loads and initializes views based on the current URL path and the
     - `Profile`: Displays the user profile view.
 
 - **Services:**
-    - `Ws`: Manages WebSocket connections.
+    - [`Ws`](ws.md): Manages WebSocket connections.
     - `Utils`: Provides utility functions, including user management and error handling.
 
 ### 2. User Roles
