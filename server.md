@@ -141,7 +141,7 @@ type Handler struct {
 }
 ```
 
-2.10 package server STARTS the api server
+12. The package server STARTS the api server
 ```go
 type Server struct {
 	httpServer *http.Server
