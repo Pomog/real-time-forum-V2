@@ -1,0 +1,26 @@
+/* User Profile Container */
+#user-profile {
+    border-radius: 8px; /* Slightly more rounded corners */
+    padding: 20px; /* Increased padding for a more spacious layout */
+    background-color: #ffffff; /* White background for a clean, modern look */
+    display: grid;
+    grid-template-columns: 300px auto;
+    grid-gap: 24px; /* Slightly larger gap for better spacing */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+/* User Profile Image */
+#user-profile img {
+    max-width: 100%; /* Ensure the image fits within its container */
+    border-radius: 8px; /* Rounded corners for a softer look */
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow around the image */
+}
+
+/* Profile Info */
+.profile-info {
+    font-size: 20px; /* Slightly larger font size for readability */
+    color: #333333; /* Darker text color for contrast against the white background */
+    line-height: 1.6; /* Increased line height for better readability */
+}

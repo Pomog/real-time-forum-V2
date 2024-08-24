@@ -2,6 +2,7 @@ package http
 
 import (
 	"errors"
+	"fmt"
 	"github.com/Pomog/real-time-forum-V2/gorouter"
 	"github.com/Pomog/real-time-forum-V2/internal/service"
 	"net/http"
@@ -9,12 +10,14 @@ import (
 
 func (h *Handler) getAllCategories(ctx *gorouter.Context) {
 	categories, err := h.categoriesService.GetAll()
+
 	if err != nil {
 		ctx.WriteError(http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	err = ctx.WriteJSON(http.StatusOK, categories)
+	fmt.Println(ctx)
 	if err != nil {
 		return
 	}

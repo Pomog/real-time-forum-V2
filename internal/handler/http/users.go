@@ -2,6 +2,7 @@ package http
 
 import (
 	"errors"
+	"fmt"
 	"github.com/Pomog/real-time-forum-V2/gorouter"
 	"github.com/Pomog/real-time-forum-V2/internal/service"
 	"github.com/Pomog/real-time-forum-V2/validator"
@@ -21,10 +22,14 @@ type usersSignUpInput struct {
 func (h *Handler) usersSignUp(ctx *gorouter.Context) {
 	var input usersSignUpInput
 
+	fmt.Println("IN the func (h *Handler) usersSignUp(ctx *gorouter.Context) {")
+
 	if err := ctx.ReadBody(&input); err != nil {
 		ctx.WriteError(http.StatusBadRequest, err.Error())
 		return
 	}
+
+	fmt.Println(input)
 
 	if err := validator.Validate(input); err != nil {
 		ctx.WriteError(http.StatusBadRequest, err.Error())
@@ -65,6 +70,8 @@ type tokenResponse struct {
 
 func (h *Handler) usersSignIn(ctx *gorouter.Context) {
 	var input usersSignInInput
+
+	fmt.Println("IN the func (h *Handler) usersSignIn")
 
 	if err := ctx.ReadBody(&input); err != nil {
 		ctx.WriteError(http.StatusBadRequest, err.Error())

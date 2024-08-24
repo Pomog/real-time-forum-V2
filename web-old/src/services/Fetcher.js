@@ -16,32 +16,34 @@ const fetcher = {
 
        localStorage.removeItem("accessToken")
        localStorage.removeItem("refreshToken")
-        
+
         const path = "/api/auth/refresh"
         const body = { accessToken: accessToken, refreshToken: refreshToken }
         const data = await fetcher.post(path, body)
         const payload = Utils.parseJwt(data.accessToken)
-        
+
         localStorage.setItem("accessToken", data.accessToken)
         localStorage.setItem("refreshToken", data.refreshToken)
-        localStorage.setItem("role", parseInt(payload.role))
-
+        localStorage.setItem("role", parseInt(payload.role).toString())
         console.log("localStorage.setItem(accessToken)");
         console.log((localStorage.getItem("accessToken") || "").toString());
+
     }
 }
 
 const makeRequest = async (path, body, method) => {
     const url = `http://${API_HOST_NAME}${path}`
 
-    const options = {
+    let options = {
         mode: 'cors',
         method: method,
-        body: JSON.stringify(body)
+    }
+    if (body && method !== 'GET') {
+        options.body = JSON.stringify(body)
     }
 
     const accessToken = localStorage.getItem("accessToken")
-    if (accessToken != undefined) {
+    if (accessToken !== undefined) {
         options.headers = new Headers({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
@@ -52,22 +54,24 @@ const makeRequest = async (path, body, method) => {
         Utils.showError(503)
         return
     })
-    console.log("response.json()")
+
+    let respBody
+
+    console.log("response.json()");
     console.log(accessToken);
     console.log(url);
     console.log(options);
     console.log(path);
     console.log(response.status);
-    var respBody
 
     try {
         respBody = await response.json()
     } catch {
         return
     }
-    
-    if (response.status == 400) {
-        if (respBody.error == "invalid token") {
+
+    if (response.status === 400) {
+        if (respBody.error === "invalid token") {
             Utils.logOut()
             Router.navigateTo("/sign-in")
             return
@@ -82,15 +86,15 @@ const makeRequest = async (path, body, method) => {
         return
     }
 
-    if (response.status == 401) {
-        if (respBody.error == "token has expired") {
+    if (response.status === 401) {
+        if (respBody.error === "token has expired") {
             await fetcher.refreshToken()
             return await makeRequest(path, body, method)
         }
         return respBody
     }
 
-    if (response.status == 409) {
+    if (response.status === 409) {
         return respBody
     }
 

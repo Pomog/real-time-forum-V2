@@ -8,8 +8,8 @@ const likeTypes = {
     dislike: 2
 }
 
-var currCommentPageNum = 1
-var commentsEnded = false
+let currCommentPageNum = 1;
+let commentsEnded = false;
 
 const getPost = async (postID) => {
     const path = `/api/posts/${postID}`
@@ -38,7 +38,7 @@ const likePost = async (postID, likeType) => {
     const path = `/api/posts/${postID}/likes`
     const body = { likeType: likeType }
 
-    fetcher.post(path, body)
+    await fetcher.post(path, body)
 
     const likeButton = document.getElementById(`like-post-button`)
     const dislikeButton = document.getElementById(`dislike-post-button`)
@@ -170,7 +170,7 @@ const drawPost = async (post) => {
 
 const drawPostCommentsPage = async (postID, page) => {
     const data = await getComments(postID, page)
-    drawPostComments(data)
+    await drawPostComments(data)
 }
 
 const drawPostComments = async (comments) => {
@@ -325,8 +325,8 @@ export default class extends AbstractView {
     async init() {
         const post = await getPost(this.postID)
         if (post) {
-            drawPost(post, this.user)
-            drawPostCommentsPage(this.postID, currCommentPageNum)
+            await drawPost(post, this.user)
+            await drawPostCommentsPage(this.postID, currCommentPageNum)
 
             const nextButtonEl = document.getElementById(`next-button`)
             const prevButtonEl = document.getElementById(`prev-button`)
@@ -337,7 +337,7 @@ export default class extends AbstractView {
                     return
                 }
                 currCommentPageNum++
-                pageNumber.innerText = currCommentPageNum
+                pageNumber.innerText = currCommentPageNum.toString();
                 drawPostCommentsPage(this.postID, currCommentPageNum)
             })
 
@@ -347,7 +347,7 @@ export default class extends AbstractView {
                 }
                 commentsEnded = false
                 currCommentPageNum--
-                pageNumber.innerText = currCommentPageNum
+                pageNumber.innerText = currCommentPageNum.toString();
                 drawPostCommentsPage(this.postID, currCommentPageNum)
             })
 
@@ -359,9 +359,9 @@ export default class extends AbstractView {
     
                 const imageMaxSize = 20 * 1024 * 1024
                 const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"]
-    
-                var imageBase64 = ""
-    
+
+                let imageBase64 = "";
+
                 imageInput.addEventListener("change", async () => {
                     errorMessage.innerText = ""
                     imagePreview.innerHTML = ""

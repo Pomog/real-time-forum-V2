@@ -1,31 +1,43 @@
 import Ws from "./Ws.js";
 
 const parseJwt = (token) => {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
-    console.log("const parseJwt = (token) => {");
+
     return JSON.parse(jsonPayload);
 };
 
 const getUser = () => {
-    return {
+    const user = {
         id: localStorage.getItem('sub'),
         role: localStorage.getItem('role'),
         accessToken: localStorage.getItem('accessToken'),
         refreshToken: localStorage.getItem('refreshToken')
-    }
-}
+    };
+
+    // Log the user object to the console
+    console.log("getUser output:", user);
+
+    return user;
+};
 
 const logOut = () => {
-    localStorage.removeItem('sub')
-    localStorage.removeItem('role')
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('sub');
+    localStorage.removeItem('role');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     Ws.disconnect()
+        .then(() => {
+            console.log('WebSocket disconnected successfully.');
+        })
+        .catch((err) => {
+            console.error('Error disconnecting WebSocket:', err);
+        });
 }
+
 
 
 const fileToBase64 = (file) => {
@@ -72,14 +84,14 @@ const drawErrorMessage = (err) => {
 }
 
 const debounce = (func, wait, immediate) => {
-    var timeout;
+    let timeout;
     return function () {
-        var context = this, args = arguments;
-        var later = function () {
+        const context = this, args = arguments;
+        const later = function () {
             timeout = null;
             if (!immediate) func.apply(context, args);
         };
-        var callNow = immediate && !timeout;
+        const callNow = immediate && !timeout;
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
         if (callNow) func.apply(context, args);

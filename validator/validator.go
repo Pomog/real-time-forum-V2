@@ -117,6 +117,7 @@ func checkRequired(data interface{}) error {
 }
 
 func checkPassword(pass string) error {
+	fmt.Println("*************************> IN THE checkPassword")
 	numRegex := regexp.MustCompile(`[0-9]{1}`)
 	lowercaseRegex := regexp.MustCompile(`[a-z]{1}`)
 	uppercaseRegex := regexp.MustCompile(`[A-Z]{1}`)
@@ -134,11 +135,13 @@ func checkPassword(pass string) error {
 	if !symbolRegex.MatchString(pass) {
 		return newError("must contain at least one symbol\n(!, @, #, ~, $, %, ^, &, *, (, ), +, |, _, )")
 	}
+	fmt.Println("*************************>checkPassword")
+	fmt.Println("*************************> OK")
 	return nil
 }
 
 func checkEmail(email string) error {
-	emailRegex := regexp.MustCompile(`^[\w-\.]+@([\w-]+\.)+[\w-]{2,24}$`)
+	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9-]+\.[a-zA-Z]{2,24}$`)
 
 	if !emailRegex.MatchString(email) {
 		return newError("e-mail is invalid")

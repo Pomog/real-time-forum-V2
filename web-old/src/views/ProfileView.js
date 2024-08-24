@@ -1,8 +1,9 @@
 import fetcher from "../services/Fetcher.js";
 import AbstractView from "./AbstractView.js";
+import PostUtils from "../services/PostUtils.js"
 
 const genders = { 1: 'Male', 2: 'Female' }
-const roles = {  1: 'Guest',  2: 'User', 3: 'Moderator',  4: 'Administator' }
+const roles = {  1: 'Guest',  2: 'User', 3: 'Moderator',  4: 'Administrator' }
 
 const getUserByID = async (id) => {
     const path = `/api/users/${id}`
@@ -17,31 +18,6 @@ const getUsersPosts = async (userID) => {
 const getUsersRatedPosts = async (userID) => {
     const path = `/api/users/${userID}/rated-posts`
     return await fetcher.get(path);
-}
-
-const newPostElement = (post) => {
-    const el = document.createElement("div")
-    el.classList.add("post")
-
-    const linkToPost = document.createElement("a")
-    linkToPost.classList.add("post-link")
-    linkToPost.setAttribute("href", `/post/${post.id}`)
-    linkToPost.setAttribute("data-link", "")
-    linkToPost.innerText = `${post.title}`
-
-    const postDate = document.createElement("p")
-    postDate.innerText = new Date(post.date).toLocaleString()
-
-    const linkToAuthor = document.createElement("a")
-    linkToAuthor.setAttribute("href", `/user/${post.author.id}`)
-    linkToAuthor.setAttribute("data-link", "")
-    linkToAuthor.innerText = `${post.author.firstName} ${post.author.lastName}`
-
-    el.append(linkToPost)
-    el.append(postDate)
-    el.append(linkToAuthor)
-
-    return el
 }
 
 export default class extends AbstractView {
@@ -93,7 +69,7 @@ export default class extends AbstractView {
         const usersPostsEl = document.getElementById('users-posts')
         if (usersPosts != null) {
             usersPosts.forEach((post) => {
-                const postEl = newPostElement(post)
+                const postEl = PostUtils.newPostElement(post);
                 usersPostsEl.append(postEl)
             })
         } else {
@@ -105,7 +81,7 @@ export default class extends AbstractView {
         const usersLikedPostsEl = document.getElementById('users-liked-posts')
         if (usersLikedPosts.length > 0 ) {
             usersLikedPosts.forEach((post) => {
-                const postEl = newPostElement(post)
+                const postEl = PostUtils.newPostElement(post);
                 usersLikedPostsEl.append(postEl)
             })
         } else {
@@ -116,7 +92,7 @@ export default class extends AbstractView {
         const usersDislikedPostsEl = document.getElementById('users-disliked-posts')
         if (usersDisLikedPosts.length > 0) {
             usersDisLikedPosts.forEach((post) => {
-                const postEl = newPostElement(post)
+                const postEl = PostUtils.newPostElement(post);
                 usersDislikedPostsEl.append(postEl)
             })
         } else {
