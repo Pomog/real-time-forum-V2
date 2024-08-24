@@ -30,8 +30,6 @@ const signIn = async (usernameOrEmail, password) => {
     })
 }
 
-
-
 export default class extends AbstractView {
     constructor(params) {
         super(params);
@@ -51,7 +49,6 @@ export default class extends AbstractView {
 
                 <button>Sign in</button>
             </form>
-
         `;
     }
 

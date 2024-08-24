@@ -25,9 +25,6 @@ const fetcher = {
         localStorage.setItem("accessToken", data.accessToken)
         localStorage.setItem("refreshToken", data.refreshToken)
         localStorage.setItem("role", parseInt(payload.role))
-
-        console.log("localStorage.setItem(accessToken)");
-        console.log((localStorage.getItem("accessToken") || "").toString());
     }
 }
 
@@ -41,7 +38,7 @@ const makeRequest = async (path, body, method) => {
     }
 
     const accessToken = localStorage.getItem("accessToken")
-    if (accessToken != undefined) {
+    if (accessToken) {
         options.headers = new Headers({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`,
@@ -50,15 +47,10 @@ const makeRequest = async (path, body, method) => {
 
     const response = await fetch(url, options).catch((e) => {
         Utils.showError(503)
-        return
+
     })
-    console.log("response.json()")
-    console.log(accessToken);
-    console.log(url);
-    console.log(options);
-    console.log(path);
-    console.log(response.status);
-    var respBody
+
+    let respBody;
 
     try {
         respBody = await response.json()
