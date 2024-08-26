@@ -18,7 +18,7 @@ It dynamically loads and initializes views based on the current URL path and the
 
 - **Services:**
     - [`Ws`](ws.md): Manages WebSocket connections.
-    - `Utils`: Provides utility functions, including user management and error handling.
+    - [`Utils`](utils.md):: Provides utility functions, including user management and error handling.
 
 ### 2. User Roles
 The application defines four user roles:

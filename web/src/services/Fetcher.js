@@ -60,7 +60,7 @@ const makeRequest = async (path, body, method) => {
     
     if (response.status == 400) {
         if (respBody.error == "invalid token") {
-            Utils.logOut()
+            await Utils.logOut()
             Router.navigateTo("/sign-in")
             return
         }

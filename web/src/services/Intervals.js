@@ -1,6 +1,6 @@
-var array = []
+let array = [];
 
-var intervals = {
+const intervals = {
     add: async (i) => {
         array.push(i)
     },
@@ -17,6 +17,6 @@ var intervals = {
 
         array = []
     }
-}
+};
 
 export default intervals

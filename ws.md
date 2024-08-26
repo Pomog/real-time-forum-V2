@@ -1,4 +1,4 @@
-git push new-remote main --force# WebSocket Utility Documentation
+# WebSocket Utility Documentation
 The WebSocket utility module is responsible for establishing and managing WebSocket connections within the application. It provides methods to connect, send messages, and disconnect from the WebSocket server. The module also handles incoming messages and triggers appropriate actions based on the message type.
 
 ## Features
