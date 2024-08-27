@@ -1,6 +1,9 @@
 package app
 
 import (
+	"log"
+	"os"
+
 	"github.com/Pomog/real-time-forum-V2/internal/config"
 	"github.com/Pomog/real-time-forum-V2/internal/handler/http"
 	"github.com/Pomog/real-time-forum-V2/internal/handler/ws"
@@ -11,11 +14,9 @@ import (
 	"github.com/Pomog/real-time-forum-V2/pkg/database"
 	"github.com/Pomog/real-time-forum-V2/pkg/hash"
 	"github.com/Pomog/real-time-forum-V2/server"
-	"log"
-	"os"
 )
 
-func Run(configPath *string) {
+func Run(configPath *string) { //Func to set up DB, tokens, sessions, handlers and server
 	configServer, err := config.NewConfig(*configPath)
 	if err != nil {
 		log.Fatalln(err)

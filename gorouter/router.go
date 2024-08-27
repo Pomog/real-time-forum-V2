@@ -25,7 +25,7 @@ func NewRouter() *Router {
 	return &Router{}
 }
 
-func (r *Router) GET(pattern string, handler Handler) {
+func (r *Router) GET(pattern string, handler Handler) { //Functions to add handle to router based on method
 	r.handle(pattern, handler, http.MethodGet)
 }
 
@@ -51,14 +51,14 @@ func WrapHandler(h http.Handler) Handler {
 	}
 }
 
-func (r *Router) handle(pattern string, handler Handler, method string) {
+func (r *Router) handle(pattern string, handler Handler, method string) { //Func to add new router to list of routes
 	regex, keys := readPatternAndKeys(pattern)
 	route := Route{Pattern: regex, Handler: handler, Method: method, Keys: keys}
 
 	r.Routes = append(r.Routes, route)
 }
 
-func readPatternAndKeys(pattern string) (*regexp.Regexp, []string) {
+func readPatternAndKeys(pattern string) (*regexp.Regexp, []string) { //Func to read patterns from URL (ids, keys, etc)
 	var keys []string
 	split := strings.Split(pattern, "/")
 
@@ -77,7 +77,7 @@ func readPatternAndKeys(pattern string) (*regexp.Regexp, []string) {
 	return regexp.MustCompile(regexStr), keys
 }
 
-func (r *Router) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (r *Router) ServeHTTP(writer http.ResponseWriter, request *http.Request) { //Func to find the matching route based on request
 	ctx := &Context{
 		Request:        request,
 		ResponseWriter: writer,

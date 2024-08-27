@@ -8,6 +8,7 @@ import (
 	"strconv"
 )
 
+// Context struct is used to handle http requests and responses
 type Context struct {
 	http.ResponseWriter
 	*http.Request
@@ -18,7 +19,7 @@ type Error struct {
 	Error string `json:"error"`
 }
 
-func (ctx *Context) WriteString(code int, body string) {
+func (ctx *Context) WriteString(code int, body string) { //Func to write string as response
 	ctx.ResponseWriter.Header().Set("Content-Type", "text/plain")
 	ctx.WriteHeader(code)
 
@@ -28,7 +29,7 @@ func (ctx *Context) WriteString(code int, body string) {
 	}
 }
 
-func (ctx *Context) WriteJSON(code int, data interface{}) error {
+func (ctx *Context) WriteJSON(code int, data interface{}) error { //Func to serialize data to JSON format
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -43,7 +44,7 @@ func (ctx *Context) WriteJSON(code int, data interface{}) error {
 	return nil
 }
 
-func (ctx *Context) WriteError(code int, err string) {
+func (ctx *Context) WriteError(code int, err string) { //Func to write error message in JSON
 	ctx.ResponseWriter.Header().Set("Content-Type", "application/json")
 	ctx.WriteHeader(code)
 
@@ -51,7 +52,7 @@ func (ctx *Context) WriteError(code int, err string) {
 	ctx.ResponseWriter.Write(jsonData)
 }
 
-func (ctx *Context) ReadBody(data interface{}) error {
+func (ctx *Context) ReadBody(data interface{}) error { //Func to read request body
 	body, err := io.ReadAll(ctx.Request.Body)
 	if err != nil {
 		return err
@@ -64,7 +65,7 @@ func (ctx *Context) ReadBody(data interface{}) error {
 	return nil
 }
 
-func (ctx *Context) setURLValues(keys, values []string) {
+func (ctx *Context) setURLValues(keys, values []string) { //Rest of the functions to handle URL parameters
 	for i, key := range keys {
 		ctx.SetParam(key, values[i])
 	}

@@ -2,15 +2,14 @@ package database
 
 import (
 	"database/sql"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func ConnectDB(driver, dir, fileName, schemesDir string) (*sql.DB, error) {
-	isNewDB := !fileExists(filepath.Join(dir, fileName))
+func ConnectDB(driver, dir, fileName, schemesDir string) (*sql.DB, error) { //Func to open database
+	isNewDB := !fileExists(filepath.Join(dir, fileName)) //Checks if DB file already exists
 	if isNewDB {
 		err := os.MkdirAll(dir, os.ModePerm)
 		if err != nil {
@@ -21,7 +20,7 @@ func ConnectDB(driver, dir, fileName, schemesDir string) (*sql.DB, error) {
 	enableForeignKeys := "?_foreign_keys=on&cache=shared&mode=rwc"
 	dataSourceName := filepath.Join(dir, fileName) + enableForeignKeys
 
-	db, err := sql.Open(driver, dataSourceName)
+	db, err := sql.Open(driver, dataSourceName) //Opens database
 	if err != nil {
 		return nil, err
 	}
@@ -45,14 +44,14 @@ func ConnectDB(driver, dir, fileName, schemesDir string) (*sql.DB, error) {
 	return db, nil
 }
 
-func fileExists(fileName string) bool {
+func fileExists(fileName string) bool { //Func to check if file exists
 	if _, err := os.Stat(fileName); os.IsNotExist(err) {
 		return false
 	}
 	return true
 }
 
-func prepareDB(db *sql.DB, schemesDir string) error {
+func prepareDB(db *sql.DB, schemesDir string) error { //Func to prepare database based on given schemes
 	schemes, err := readSchemes(schemesDir)
 	if err != nil {
 		return err
@@ -74,17 +73,17 @@ func prepareDB(db *sql.DB, schemesDir string) error {
 	return nil
 }
 
-func readSchemes(schemesDir string) ([]string, error) {
+func readSchemes(schemesDir string) ([]string, error) { //Func to read schemes
 	var schemes []string
 
-	files, err := ioutil.ReadDir(schemesDir)
+	files, err := os.ReadDir(schemesDir)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, file := range files {
 		fileName := filepath.Join(schemesDir, file.Name())
-		data, err := ioutil.ReadFile(fileName)
+		data, err := os.ReadFile(fileName)
 		if err != nil {
 			return nil, err
 		}

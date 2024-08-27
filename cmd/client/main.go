@@ -2,12 +2,14 @@ package main
 
 import (
 	"flag"
-	"github.com/Pomog/real-time-forum-V2/internal/config"
 	"log"
 	"net/http"
 	"text/template"
+
+	"github.com/Pomog/real-time-forum-V2/internal/config"
 )
 
+// Function for starting client server
 func main() {
 	var configPath = flag.String("config-path", "./configs/config.json", "Path to the config file")
 	flag.Parse()

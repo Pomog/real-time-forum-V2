@@ -3,9 +3,10 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Pomog/real-time-forum-V2/validator"
 	"os"
 	"time"
+
+	"github.com/Pomog/real-time-forum-V2/validator"
 )
 
 type (
@@ -58,6 +59,8 @@ type (
 		DefaultFemaleAvatar            interface{}
 	}
 )
+
+//Code to define all structs params
 
 func NewConfig(confPath string) (*Conf, error) {
 	var config Conf

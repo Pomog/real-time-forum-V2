@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Function for setting up environment variables
 func Load() {
 	bytes, err := os.ReadFile(".env")
 	if err != nil {
@@ -15,7 +16,7 @@ func Load() {
 	lines := strings.Split(string(bytes), "\n")
 
 	for i, line := range lines {
-		if len(strings.TrimSpace(line)) > 0 && !strings.HasPrefix(line, "#") {
+		if len(strings.TrimSpace(line)) > 0 && !strings.HasPrefix(line, "#") { //Checks if line is empty and line is a comment
 			arr := strings.Split(line, "=")
 			if len(arr) != 2 {
 				log.Fatalf("invalid format at line %v\n%v", i+1, line)
