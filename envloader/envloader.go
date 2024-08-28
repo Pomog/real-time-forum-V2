@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Function for setting up environment variables
+// Load Function for setting up environment variables
 func Load() {
 	bytes, err := os.ReadFile(".env")
 	if err != nil {

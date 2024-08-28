@@ -8,8 +8,6 @@ import (
 	"github.com/Pomog/real-time-forum-V2/pkg/auth"
 	"log"
 	"net/http"
-
-	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type route struct {
@@ -194,12 +192,16 @@ func (h *Handler) Init() {
 			Handler: h.wsHandler.ServeWS,
 		},
 
-		{
-			Path:    "/swagger/*",
-			Method:  "GET",
-			MinRole: model.Roles.Guest,
-			Handler: gorouter.WrapHandler(httpSwagger.Handler(httpSwagger.URL("http://localhost:8081/swagger/doc.json"))),
-		},
+		/*
+				// swagger documentation
+			{
+
+				Path:    "/swagger/*",
+				Method:  "GET",
+				MinRole: model.Roles.Guest,
+				Handler: gorouter.WrapHandler(httpSwagger.Handler(httpSwagger.URL("http://localhost:8081/swagger/doc.json"))),
+			},
+		*/
 
 		{
 			Path:    "/images/*",
